@@ -16,54 +16,89 @@ public class App {
 
     public static void main(String[] args) throws IOException {
 //        var code = "(let [x 1 y true] (if y x (inc x)))";
-        var code = """
-                   (let [x : int
-                         y : bool
-                         f : (bool -> int)] (f y x))
-                   """;
+//        var code = """
+//                   (let [x : int
+//                         y : bool
+//                         f : (bool -> int)] (f y x))
+//                   """;
 //        var code = "(1 :(bool -> int))";
+        var code = "(let [f (fn [x] (x 1))] (if true (f 10) 1))";
         var inputStream = CharStreams.fromString(code);
         var lexer = new NancyLexer(inputStream);
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new NancyParser(tokenStream);
 
-        evalExpr(parser.expr());
+        System.out.println(readExpr(parser.expr()));
     }
 
-    public static void evalExpr(NancyParser.ExprContext expr) {
+    public static NancyExpr readExpr(NancyParser.ExprContext expr) {
         TerminalNode anInt = expr.INT();
         TerminalNode anSymb = expr.SYMB();
         NancyParser.Type_exprContext aType = expr.type_expr();
         List<NancyParser.ExprContext> expr1 = expr.expr();
         if (anInt != null) {
-            System.out.println(anInt);
-        }  else if (anSymb != null) {
-            System.out.println(anSymb);
+            return new NumExpr(Integer.parseInt(anInt.getText()));
+        } else if (anSymb != null) {
+            String text = anSymb.getText();
+            if (text.equals("true") || text.equals("false")) {
+                return new BoolExpr(Boolean.parseBoolean(text));
+            }
+            // todo nil
+            return new SymbExpr(anSymb.getText());
         } else if (aType != null) {
-            System.out.println(evalType(aType));
+            return readType(aType);
         }
+        // list
         else if (expr1 != null) {
-            for (NancyParser.ExprContext e1 : expr1) {
-                evalExpr(e1);
+            NancyParser.ExprContext exprContext = expr1.getFirst();
+            if (exprContext.SYMB() != null) {
+                String symbName = exprContext.SYMB().getText();
+                if (symbName.equals("if")) {
+                    return new IfExpr(readExpr(expr1.get(1)), readExpr(expr1.get(2)), readExpr(expr1.get(3)));
+                } else if (symbName.equals("let")) {
+                    return new LetExpr(readExpr(expr1.get(1).expr(0)), readExpr(expr1.get(1).expr(1)), readExpr(expr1.get(2)));
+                } else if (symbName.equals("fn")) {
+                    return new FnExpr(readExpr(expr1.get(1).expr(0)), readExpr(expr1.get(2)));
+                } else if (symbName.equals("-")) {
+                    return new DiffExpr(readExpr(expr1.get(1)), readExpr(expr1.get(2)));
+                } else {
+                    return new CallExpr(readExpr(expr1.get(0)), readExpr(expr1.get(1)));
+                }
             }
         }
+        throw new IllegalArgumentException("Don't know what to do with " + expr1);
     }
 
-    public static ExprType evalType(NancyParser.Type_exprContext expr) {
+    public static NancyType readType(NancyParser.Type_exprContext expr) {
         if (expr.INT_TYPE() != null) {
             return new IntType();
         } else if (expr.BOOL_TYPE() != null) {
             return new BoolType();
         } else {
             List<NancyParser.Type_exprContext> typeExprContexts = expr.type_expr();
-            return new FuncType(evalType(typeExprContexts.get(0)), evalType(typeExprContexts.get(1)));
+            return new FuncType(readType(typeExprContexts.get(0)), readType(typeExprContexts.get(1)));
         }
     }
 
-    public sealed interface ExprType permits BoolType, IntType, FuncType {}
+    // types
+    public sealed interface NancyType extends NancyExpr permits BoolType, IntType, FuncType {}
 
-    public record BoolType() implements ExprType {}
-    public record IntType() implements ExprType {}
-    public record FuncType(ExprType from, ExprType to) implements ExprType {}
+    public record BoolType() implements NancyType {}
+    public record IntType() implements NancyType {}
+    public record FuncType(NancyType from, NancyType to) implements NancyType {}
 
+    // exprs
+    public sealed interface NancyExpr permits NancyType, SymbExpr, BoolExpr, NumExpr, DiffExpr, IfExpr, LetExpr, FnExpr, CallExpr {}
+
+    public record SymbExpr(String val) implements NancyExpr {}
+    public record BoolExpr(boolean val) implements NancyExpr {}
+    public record NumExpr(Integer val) implements NancyExpr {}
+
+    public record DiffExpr(NancyExpr e1, NancyExpr e2) implements NancyExpr {}
+
+    public record IfExpr(NancyExpr e1, NancyExpr e2, NancyExpr e3) implements NancyExpr {}
+    // todo multiple binding
+    public record LetExpr(NancyExpr varName, NancyExpr varVal, NancyExpr body) implements NancyExpr {}
+    public record FnExpr(NancyExpr binding, NancyExpr body) implements NancyExpr {}
+    public record CallExpr(NancyExpr rator, NancyExpr rand) implements NancyExpr {}
 }
