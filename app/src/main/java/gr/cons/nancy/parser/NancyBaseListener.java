@@ -50,18 +50,6 @@ public class NancyBaseListener implements NancyListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType_expr(NancyParser.Type_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterType(NancyParser.TypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitType(NancyParser.TypeContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

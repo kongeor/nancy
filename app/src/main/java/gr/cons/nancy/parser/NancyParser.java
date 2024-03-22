@@ -22,10 +22,10 @@ public class NancyParser extends Parser {
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, INT_TYPE=7, BOOL_TYPE=8, 
 		INT=9, SYMB=10, WS=11;
 	public static final int
-		RULE_prog = 0, RULE_expr = 1, RULE_type_expr = 2, RULE_type = 3;
+		RULE_prog = 0, RULE_expr = 1, RULE_type_expr = 2;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"prog", "expr", "type_expr", "type"
+			"prog", "expr", "type_expr"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -119,9 +119,9 @@ public class NancyParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(8);
+			setState(6);
 			expr();
-			setState(9);
+			setState(7);
 			match(EOF);
 			}
 		}
@@ -169,82 +169,82 @@ public class NancyParser extends Parser {
 		enterRule(_localctx, 2, RULE_expr);
 		int _la;
 		try {
-			setState(32);
+			setState(30);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(11);
+				setState(9);
 				match(T__0);
-				setState(12);
+				setState(10);
 				type_expr();
 				}
 				break;
 			case INT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(13);
+				setState(11);
 				match(INT);
 				}
 				break;
 			case SYMB:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(14);
+				setState(12);
 				match(SYMB);
 				}
 				break;
 			case T__1:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(15);
+				setState(13);
 				match(T__1);
-				setState(17); 
+				setState(15); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(16);
+					setState(14);
 					expr();
 					}
 					}
-					setState(19); 
+					setState(17); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 3606L) != 0) );
-				setState(21);
+				setState(19);
 				match(T__2);
 				}
 				break;
 			case T__3:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(23);
+				setState(21);
 				match(T__3);
-				setState(25); 
+				setState(23); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(24);
+					setState(22);
 					expr();
 					}
 					}
-					setState(27); 
+					setState(25); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 3606L) != 0) );
-				setState(29);
+				setState(27);
 				match(T__4);
 				}
 				break;
 			case WS:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(31);
+				setState(29);
 				match(WS);
 				}
 				break;
@@ -291,35 +291,35 @@ public class NancyParser extends Parser {
 		Type_exprContext _localctx = new Type_exprContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_type_expr);
 		try {
-			setState(42);
+			setState(40);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case INT_TYPE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(34);
+				setState(32);
 				match(INT_TYPE);
 				}
 				break;
 			case BOOL_TYPE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(35);
+				setState(33);
 				match(BOOL_TYPE);
 				}
 				break;
 			case T__1:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(36);
+				setState(34);
 				match(T__1);
+				setState(35);
+				type_expr();
+				setState(36);
+				match(T__5);
 				setState(37);
 				type_expr();
 				setState(38);
-				match(T__5);
-				setState(39);
-				type_expr();
-				setState(40);
 				match(T__2);
 				}
 				break;
@@ -338,81 +338,38 @@ public class NancyParser extends Parser {
 		return _localctx;
 	}
 
-	@SuppressWarnings("CheckReturnValue")
-	public static class TypeContext extends ParserRuleContext {
-		public Type_exprContext type_expr() {
-			return getRuleContext(Type_exprContext.class,0);
-		}
-		public TypeContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_type; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NancyListener ) ((NancyListener)listener).enterType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NancyListener ) ((NancyListener)listener).exitType(this);
-		}
-	}
-
-	public final TypeContext type() throws RecognitionException {
-		TypeContext _localctx = new TypeContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_type);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(44);
-			match(T__0);
-			setState(45);
-			type_expr();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static final String _serializedATN =
-		"\u0004\u0001\u000b0\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
-		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0001\u0000\u0001\u0000\u0001"+
-		"\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
-		"\u0001\u0004\u0001\u0012\b\u0001\u000b\u0001\f\u0001\u0013\u0001\u0001"+
-		"\u0001\u0001\u0001\u0001\u0001\u0001\u0004\u0001\u001a\b\u0001\u000b\u0001"+
-		"\f\u0001\u001b\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u0001!\b\u0001"+
-		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0003\u0002+\b\u0002\u0001\u0003\u0001\u0003"+
-		"\u0001\u0003\u0001\u0003\u0000\u0000\u0004\u0000\u0002\u0004\u0006\u0000"+
-		"\u00004\u0000\b\u0001\u0000\u0000\u0000\u0002 \u0001\u0000\u0000\u0000"+
-		"\u0004*\u0001\u0000\u0000\u0000\u0006,\u0001\u0000\u0000\u0000\b\t\u0003"+
-		"\u0002\u0001\u0000\t\n\u0005\u0000\u0000\u0001\n\u0001\u0001\u0000\u0000"+
-		"\u0000\u000b\f\u0005\u0001\u0000\u0000\f!\u0003\u0004\u0002\u0000\r!\u0005"+
-		"\t\u0000\u0000\u000e!\u0005\n\u0000\u0000\u000f\u0011\u0005\u0002\u0000"+
-		"\u0000\u0010\u0012\u0003\u0002\u0001\u0000\u0011\u0010\u0001\u0000\u0000"+
-		"\u0000\u0012\u0013\u0001\u0000\u0000\u0000\u0013\u0011\u0001\u0000\u0000"+
-		"\u0000\u0013\u0014\u0001\u0000\u0000\u0000\u0014\u0015\u0001\u0000\u0000"+
-		"\u0000\u0015\u0016\u0005\u0003\u0000\u0000\u0016!\u0001\u0000\u0000\u0000"+
-		"\u0017\u0019\u0005\u0004\u0000\u0000\u0018\u001a\u0003\u0002\u0001\u0000"+
-		"\u0019\u0018\u0001\u0000\u0000\u0000\u001a\u001b\u0001\u0000\u0000\u0000"+
-		"\u001b\u0019\u0001\u0000\u0000\u0000\u001b\u001c\u0001\u0000\u0000\u0000"+
-		"\u001c\u001d\u0001\u0000\u0000\u0000\u001d\u001e\u0005\u0005\u0000\u0000"+
-		"\u001e!\u0001\u0000\u0000\u0000\u001f!\u0005\u000b\u0000\u0000 \u000b"+
-		"\u0001\u0000\u0000\u0000 \r\u0001\u0000\u0000\u0000 \u000e\u0001\u0000"+
-		"\u0000\u0000 \u000f\u0001\u0000\u0000\u0000 \u0017\u0001\u0000\u0000\u0000"+
-		" \u001f\u0001\u0000\u0000\u0000!\u0003\u0001\u0000\u0000\u0000\"+\u0005"+
-		"\u0007\u0000\u0000#+\u0005\b\u0000\u0000$%\u0005\u0002\u0000\u0000%&\u0003"+
-		"\u0004\u0002\u0000&\'\u0005\u0006\u0000\u0000\'(\u0003\u0004\u0002\u0000"+
-		"()\u0005\u0003\u0000\u0000)+\u0001\u0000\u0000\u0000*\"\u0001\u0000\u0000"+
-		"\u0000*#\u0001\u0000\u0000\u0000*$\u0001\u0000\u0000\u0000+\u0005\u0001"+
-		"\u0000\u0000\u0000,-\u0005\u0001\u0000\u0000-.\u0003\u0004\u0002\u0000"+
-		".\u0007\u0001\u0000\u0000\u0000\u0004\u0013\u001b *";
+		"\u0004\u0001\u000b+\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0002\u0007\u0002\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0004\u0001\u0010"+
+		"\b\u0001\u000b\u0001\f\u0001\u0011\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0004\u0001\u0018\b\u0001\u000b\u0001\f\u0001\u0019\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0003\u0001\u001f\b\u0001\u0001\u0002\u0001"+
+		"\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001"+
+		"\u0002\u0003\u0002)\b\u0002\u0001\u0002\u0000\u0000\u0003\u0000\u0002"+
+		"\u0004\u0000\u00000\u0000\u0006\u0001\u0000\u0000\u0000\u0002\u001e\u0001"+
+		"\u0000\u0000\u0000\u0004(\u0001\u0000\u0000\u0000\u0006\u0007\u0003\u0002"+
+		"\u0001\u0000\u0007\b\u0005\u0000\u0000\u0001\b\u0001\u0001\u0000\u0000"+
+		"\u0000\t\n\u0005\u0001\u0000\u0000\n\u001f\u0003\u0004\u0002\u0000\u000b"+
+		"\u001f\u0005\t\u0000\u0000\f\u001f\u0005\n\u0000\u0000\r\u000f\u0005\u0002"+
+		"\u0000\u0000\u000e\u0010\u0003\u0002\u0001\u0000\u000f\u000e\u0001\u0000"+
+		"\u0000\u0000\u0010\u0011\u0001\u0000\u0000\u0000\u0011\u000f\u0001\u0000"+
+		"\u0000\u0000\u0011\u0012\u0001\u0000\u0000\u0000\u0012\u0013\u0001\u0000"+
+		"\u0000\u0000\u0013\u0014\u0005\u0003\u0000\u0000\u0014\u001f\u0001\u0000"+
+		"\u0000\u0000\u0015\u0017\u0005\u0004\u0000\u0000\u0016\u0018\u0003\u0002"+
+		"\u0001\u0000\u0017\u0016\u0001\u0000\u0000\u0000\u0018\u0019\u0001\u0000"+
+		"\u0000\u0000\u0019\u0017\u0001\u0000\u0000\u0000\u0019\u001a\u0001\u0000"+
+		"\u0000\u0000\u001a\u001b\u0001\u0000\u0000\u0000\u001b\u001c\u0005\u0005"+
+		"\u0000\u0000\u001c\u001f\u0001\u0000\u0000\u0000\u001d\u001f\u0005\u000b"+
+		"\u0000\u0000\u001e\t\u0001\u0000\u0000\u0000\u001e\u000b\u0001\u0000\u0000"+
+		"\u0000\u001e\f\u0001\u0000\u0000\u0000\u001e\r\u0001\u0000\u0000\u0000"+
+		"\u001e\u0015\u0001\u0000\u0000\u0000\u001e\u001d\u0001\u0000\u0000\u0000"+
+		"\u001f\u0003\u0001\u0000\u0000\u0000 )\u0005\u0007\u0000\u0000!)\u0005"+
+		"\b\u0000\u0000\"#\u0005\u0002\u0000\u0000#$\u0003\u0004\u0002\u0000$%"+
+		"\u0005\u0006\u0000\u0000%&\u0003\u0004\u0002\u0000&\'\u0005\u0003\u0000"+
+		"\u0000\')\u0001\u0000\u0000\u0000( \u0001\u0000\u0000\u0000(!\u0001\u0000"+
+		"\u0000\u0000(\"\u0001\u0000\u0000\u0000)\u0005\u0001\u0000\u0000\u0000"+
+		"\u0004\u0011\u0019\u001e(";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

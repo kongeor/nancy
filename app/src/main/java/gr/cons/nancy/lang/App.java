@@ -11,24 +11,36 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class App {
 
     public static void main(String[] args) throws IOException {
 //        var code = "(let [x 1 y true] (if y x (inc x)))";
-//        var code = """
-//                   (let [x : int
-//                         y : bool
-//                         f : (bool -> int)] (f y x))
-//                   """;
+        var code = """
+                   (let [f (fn [x : bool]
+                             (fn [y : bool]
+                               y))]
+                     (let [g (fn [x : bool]
+                              (fn [y : bool]
+                                y))]
+                        (if true
+                           f
+                           g)))
+                   """;
 //        var code = "(1 :(bool -> int))";
-        var code = "(let [f (fn [x] (x 1))] (if true (f 10) 1))";
+//        var code = "(let [f (fn [x : int 1] (if true 1 x))] (if true (f 10) 1))";
+//        var code = "(let [f : (int -> bool) (fn [x : int 1] (if true true false))] (if true (f 10) 1))";
+//        var code = "(let [x : int 1] (- x true))";
         var inputStream = CharStreams.fromString(code);
         var lexer = new NancyLexer(inputStream);
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new NancyParser(tokenStream);
 
-        System.out.println(readExpr(parser.expr()));
+        var expr = readExpr(parser.expr());
+        System.out.println(expr);
+        System.out.println(Checker.typeOf(expr, new Env()));
     }
 
     public static NancyExpr readExpr(NancyParser.ExprContext expr) {
@@ -43,8 +55,11 @@ public class App {
             if (text.equals("true") || text.equals("false")) {
                 return new BoolExpr(Boolean.parseBoolean(text));
             }
-            // todo nil
-            return new SymbExpr(anSymb.getText());
+            else if (text.equals("nil")) {
+                // todo const
+                return new NilExpr();
+            }
+            return new SymbExpr(anSymb.getText(), Optional.empty());
         } else if (aType != null) {
             return readType(aType);
         }
@@ -56,9 +71,21 @@ public class App {
                 if (symbName.equals("if")) {
                     return new IfExpr(readExpr(expr1.get(1)), readExpr(expr1.get(2)), readExpr(expr1.get(3)));
                 } else if (symbName.equals("let")) {
-                    return new LetExpr(readExpr(expr1.get(1).expr(0)), readExpr(expr1.get(1).expr(1)), readExpr(expr1.get(2)));
+                    SymbExpr bindName = (SymbExpr) readExpr(expr1.get(1).expr(0));
+                    NancyExpr bindTypeOrVal = readExpr(expr1.get(1).expr(1));
+                    boolean hasType = bindTypeOrVal instanceof NancyType;
+                    SymbExpr symb = hasType ? new SymbExpr(bindName.val(), Optional.of((NancyType) bindTypeOrVal)) :bindName;
+                    NancyExpr body = readExpr(expr1.get(2));
+                    NancyExpr val = hasType ? readExpr(expr1.get(1).expr(2)) : bindTypeOrVal;
+                    return new LetExpr(symb, val, body);
                 } else if (symbName.equals("fn")) {
-                    return new FnExpr(readExpr(expr1.get(1).expr(0)), readExpr(expr1.get(2)));
+                    NancyExpr nancyExpr = readExpr(expr1.get(1).expr(0));
+                    NancyType type = null;
+                    if (expr1.get(1).expr(1) != null) {
+                        type = (NancyType) readExpr(expr1.get(1).expr(1));
+                    }
+                    SymbExpr typedExpr = type != null ? new SymbExpr(((SymbExpr)nancyExpr).val(), Optional.of(type)) : (SymbExpr) nancyExpr;
+                    return new FnExpr(typedExpr, readExpr(expr1.get(2)));
                 } else if (symbName.equals("-")) {
                     return new DiffExpr(readExpr(expr1.get(1)), readExpr(expr1.get(2)));
                 } else {
@@ -88,11 +115,29 @@ public class App {
     public record FuncType(NancyType from, NancyType to) implements NancyType {}
 
     // exprs
-    public sealed interface NancyExpr permits NancyType, SymbExpr, BoolExpr, NumExpr, DiffExpr, IfExpr, LetExpr, FnExpr, CallExpr {}
+    public sealed interface NancyExpr permits NancyType, SymbExpr, BoolExpr, NumExpr, NilExpr, DiffExpr, IfExpr, LetExpr, FnExpr, CallExpr, Cons {}
 
-    public record SymbExpr(String val) implements NancyExpr {}
+    public record SymbExpr(String val, Optional<NancyType> type) implements NancyExpr {
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SymbExpr symbExpr = (SymbExpr) o;
+            return Objects.equals(val, symbExpr.val);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(val);
+        }
+    }
     public record BoolExpr(boolean val) implements NancyExpr {}
     public record NumExpr(Integer val) implements NancyExpr {}
+
+    public record NilExpr() implements NancyExpr {
+        public static final NilExpr NIL = new NilExpr();
+    }
 
     public record DiffExpr(NancyExpr e1, NancyExpr e2) implements NancyExpr {}
 

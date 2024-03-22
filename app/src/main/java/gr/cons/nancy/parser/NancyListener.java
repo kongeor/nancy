@@ -39,14 +39,4 @@ public interface NancyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitType_expr(NancyParser.Type_exprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link NancyParser#type}.
-	 * @param ctx the parse tree
-	 */
-	void enterType(NancyParser.TypeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link NancyParser#type}.
-	 * @param ctx the parse tree
-	 */
-	void exitType(NancyParser.TypeContext ctx);
 }

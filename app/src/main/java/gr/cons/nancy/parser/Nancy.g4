@@ -17,5 +17,5 @@ type_expr: INT_TYPE
 INT_TYPE : 'int' ;
 BOOL_TYPE : 'bool' ;
 INT     : [0-9]+ ;
-SYMB    : [a-z]+ ;
+SYMB    : [a-z-]+ ;
 WS : [ \r\t\n]+ -> skip ;
